@@ -2,7 +2,7 @@ from SETR.transformer_seg import SETRModel
 import torch 
 
 if __name__ == "__main__":
-    net = SETRModel(img_size=(32, 32), 
+    net = SETRModel(img_size=(16, 16), 
                     in_channels=3, 
                     out_channels=1, 
                     hidden_size=1024, 
@@ -12,5 +12,5 @@ if __name__ == "__main__":
     t1 = torch.rand(1, 3, 256, 256)
     print("input: " + str(t1.shape))
     
-    # print(net)
+    print(net)
     print("output: " + str(net(t1).shape))

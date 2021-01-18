@@ -46,25 +46,28 @@ class Encoder2D(nn.Module):
 
 
 class PreTrainModel(nn.Module):
-    def __init__(self, img_size, 
+    def __init__(self, img_size=, 
                         in_channels, 
-                        out_channels, 
+                        out_class, 
                         hidden_size=1024, 
                         num_hidden_layers=8, 
-                        num_attention_heads=16):
+                        num_attention_heads=16,
+                        decode_features=[512, 256, 128, 64]):
         super().__init__()
         config = TransConfig(img_size=img_size, 
                             in_channels=in_channels, 
-                            out_channels=out_channels, 
+                            out_channels=0, 
                             hidden_size=hidden_size, 
                             num_hidden_layers=num_hidden_layers, 
                             num_attention_heads=num_attention_heads)
         self.encoder_2d = Encoder2D(config)
-        self.decoder_2d = Decoder2D(in_channels=config.hidden_size, out_channels=config.out_channels, features=[512, 256, 128, 64])
-
+        self.cls = nn.Linear(hidden_size, out_class)
 
     def forward(self, x):
-        pass
+        encode_img, _ = self.encoder_2d(x)
+        encode_pool = encode_img.mean(dim=1)
+        out = self.cls(encode_pool)
+        return out 
 
 
 class Decoder2D(nn.Module):
