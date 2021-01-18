@@ -80,7 +80,7 @@ if __name__ == "__main__":
             acc = compute_acc(model, data_loader_test)
             if acc > best_acc:
                 best_acc = acc 
-                torch.save(model.state_dict(), "./mnist_model.pkl")
+                torch.save(model.state_dict(), "./checkpoints/mnist_model.pkl")
 
             print("acc is " + str(acc) + ", best acc is " + str(best_acc))
 
