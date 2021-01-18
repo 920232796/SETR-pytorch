@@ -38,10 +38,33 @@ class Encoder2D(nn.Module):
 
         x = rearrange(x, 'b c (h p1) (w p2) -> b (h w) (p1 p2 c)', p1 = p1, p2 = p2)
         
-        x = self.bert_model(x)[-1] # 取出来最后一层
-        x = self.final_dense(x)
+        encode_x = self.bert_model(x)[-1] # 取出来最后一层
+
+        x = self.final_dense(encode_x)
         x = rearrange(x, "b (h w) (p1 p2 c) -> b c (h p1) (w p2)", p1 = self.hh, p2 = self.ww, h = hh, w = ww, c = self.config.hidden_size)
-        return x 
+        return encode_x, x 
+
+
+class PreTrainModel(nn.Module):
+    def __init__(self, img_size, 
+                        in_channels, 
+                        out_channels, 
+                        hidden_size=1024, 
+                        num_hidden_layers=8, 
+                        num_attention_heads=16):
+        super().__init__()
+        config = TransConfig(img_size=img_size, 
+                            in_channels=in_channels, 
+                            out_channels=out_channels, 
+                            hidden_size=hidden_size, 
+                            num_hidden_layers=num_hidden_layers, 
+                            num_attention_heads=num_attention_heads)
+        self.encoder_2d = Encoder2D(config)
+        self.decoder_2d = Decoder2D(in_channels=config.hidden_size, out_channels=config.out_channels, features=[512, 256, 128, 64])
+
+
+    def forward(self, x):
+        pass
 
 
 class Decoder2D(nn.Module):
@@ -88,25 +111,22 @@ class SETRModel(nn.Module):
                         out_channels=1, 
                         hidden_size=1024, 
                         num_hidden_layers=8, 
-                        num_attention_heads=16):
+                        num_attention_heads=16,
+                        decode_features=[512, 256, 128, 64]):
         super().__init__()
-        config = TransConfig(img_size=(32, 32), in_channels=3, out_channels=1, hidden_size=1024, num_hidden_layers=8, num_attention_heads=16)
+        config = TransConfig(img_size=img_size, 
+                            in_channels=in_channels, 
+                            out_channels=out_channels, 
+                            hidden_size=hidden_size, 
+                            num_hidden_layers=num_hidden_layers, 
+                            num_attention_heads=num_attention_heads)
         self.encoder_2d = Encoder2D(config)
-        self.decoder_2d = Decoder2D(in_channels=config.hidden_size, out_channels=config.out_channels, features=[512, 256, 128, 64])
+        self.decoder_2d = Decoder2D(in_channels=config.hidden_size, out_channels=config.out_channels, features=decode_features)
 
     def forward(self, x):
-        x = self.encoder_2d(x)
-        x = self.decoder_2d(x)
+        _, final_x = self.encoder_2d(x)
+        x = self.decoder_2d(final_x)
         return x 
-
-if __name__ == "__main__":
-    
-    config = TransConfig(img_size=(32, 32), in_channels=3, out_channels=1, hidden_size=1024, num_hidden_layers=8, num_attention_heads=16)
-
-    t1 = torch.rand(1, 3, 256, 256)
-    net = SETRModel(config)
-    print(net)
-    print(net(t1).shape)
 
    
 
