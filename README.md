@@ -1,5 +1,5 @@
 
-<img src="./SETR.png" width="500px"></img>
+<img src="./SETR.png" width="800px"></img>
 
 ## SETR - Pytorch
 
@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     t1 = torch.rand(1, 3, 256, 256)
     print("input: " + str(t1.shape))
-    
+
     net = SETRModel(config)
     print("output: " + str(net(t1).shape))
 
