@@ -3,7 +3,7 @@
 
 ## SETR - Pytorch
 
-Since the original paper (Rethinking Semantic Segmentation from a Sequence-to-Sequence Perspective with Transformers.) has no official code,I implemented it using pytorch.
+Since the original paper (Rethinking Semantic Segmentation from a Sequence-to-Sequence Perspective with Transformers.) has no official code,I implemented SETR-Progressive UPsampling(SETR-PUP) using pytorch.
 
 ## Usage
 
@@ -22,8 +22,8 @@ if __name__ == "__main__":
 
     t1 = torch.rand(1, 3, 256, 256)
     print("input: " + str(t1.shape))
+    
     net = SETRModel(config)
-    # print(net)
     print("output: " + str(net(t1).shape))
 
 ```
