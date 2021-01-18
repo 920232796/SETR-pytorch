@@ -7,6 +7,9 @@ Since the original paper (Rethinking Semantic Segmentation from a Sequence-to-Se
 
 Original paper: <a href="https://arxiv.org/abs/2012.15840">Rethinking Semantic Segmentation from a Sequence-to-Sequence Perspective with Transformers.</a>
 
+## Vit
+The Vit model is also implemented, and you can use it for image classification.
+
 ## Usage
 
 ```python
@@ -30,6 +33,9 @@ if __name__ == "__main__":
 
 ```
 If the output size is (1, 1, 256, 256), the code runs successfully.
+
+## current examples
+1. task_mnist: The simplest example, using the Vit model to classify the minst dataset.
 
 ## more
 More examples will be updated later.
