@@ -83,8 +83,14 @@ class Decoder2D(nn.Module):
         return x
 
 class SETRModel(nn.Module):
-    def __init__(self, config: TransConfig):
+    def __init__(self, img_size=(32, 32), 
+                        in_channels=3, 
+                        out_channels=1, 
+                        hidden_size=1024, 
+                        num_hidden_layers=8, 
+                        num_attention_heads=16):
         super().__init__()
+        config = TransConfig(img_size=(32, 32), in_channels=3, out_channels=1, hidden_size=1024, num_hidden_layers=8, num_attention_heads=16)
         self.encoder_2d = Encoder2D(config)
         self.decoder_2d = Decoder2D(in_channels=config.hidden_size, out_channels=config.out_channels, features=[512, 256, 128, 64])
 
