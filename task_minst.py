@@ -34,7 +34,7 @@ if __name__ == "__main__":
                     hidden_size=1024, 
                     num_hidden_layers=1, 
                     num_attention_heads=16, 
-                    decode_features=[512, 256, 128, 64])
+                    )
     print(model)
     model.to(device)
     

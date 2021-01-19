@@ -37,12 +37,11 @@ If the output size is (1, 1, 256, 256), the code runs successfully.
 ## Usage Vit
 ```python 
     model = Vit(img_size=(7, 7), 
-                        in_channels=1, 
-                        out_class=10, 
-                        hidden_size=1024, 
-                        num_hidden_layers=1, 
-                        num_attention_heads=16, 
-                        decode_features=[512, 256, 128, 64])
+                    in_channels=1, 
+                    out_class=10, 
+                    hidden_size=1024, 
+                    num_hidden_layers=1, 
+                    num_attention_heads=16)
     print(model)
     t1 = torch.rand(1, 1, 28, 28)
     print("input: " + str(t1.shape))

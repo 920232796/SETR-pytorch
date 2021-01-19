@@ -79,7 +79,7 @@ class Vit(nn.Module):
                         hidden_size=1024, 
                         num_hidden_layers=8, 
                         num_attention_heads=16,
-                        decode_features=[512, 256, 128, 64]):
+                        ):
         super().__init__()
         config = TransConfig(img_size=img_size, 
                             in_channels=in_channels, 
