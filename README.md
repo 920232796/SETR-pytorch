@@ -14,7 +14,6 @@ The Vit model is also implemented, and you can use it for image classification.
 
 ```python
 from SETR.transformer_seg import SETRModel
-from SETR.transformer_model import TransConfig
 import torch 
 
 if __name__ == "__main__":
@@ -36,6 +35,10 @@ If the output size is (1, 1, 256, 256), the code runs successfully.
 
 ## Usage Vit
 ```python 
+from SETR.transformer_seg import Vit
+import torch 
+
+if __name__ == "__main__":
     model = Vit(img_size=(7, 7), 
                     in_channels=1, 
                     out_class=10, 
