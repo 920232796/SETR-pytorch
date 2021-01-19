@@ -1,5 +1,5 @@
 import torch 
-from SETR.transformer_seg import SETRModel, Vit
+from SETR.transformer_seg import Vit
 import torchvision
 import torch
 import torch.nn as nn 
@@ -83,8 +83,4 @@ if __name__ == "__main__":
                 torch.save(model.state_dict(), "./checkpoints/mnist_model.pkl")
 
             print("acc is " + str(acc) + ", best acc is " + str(best_acc))
-
-            
-    
-
         
