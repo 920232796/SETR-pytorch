@@ -14,19 +14,19 @@ class Encoder2D(nn.Module):
         self.config = config
         self.out_channels = config.out_channels
         self.bert_model = TransModel2d(config)
-        assert config.img_size[0] * config.img_size[1] * config.hidden_size % 256 == 0, "不能除尽"
-        self.final_dense = nn.Linear(config.hidden_size, config.img_size[0] * config.img_size[1] * config.hidden_size // 256)
-        self.img_size = config.img_size
-        self.hh = self.img_size[0] // 16
-        self.ww = self.img_size[1] // 16
+        assert config.patch_size[0] * config.patch_size[1] * config.hidden_size % 256 == 0, "不能除尽"
+        self.final_dense = nn.Linear(config.hidden_size, config.patch_size[0] * config.patch_size[1] * config.hidden_size // 256)
+        self.patch_size = config.patch_size
+        self.hh = self.patch_size[0] // 16
+        self.ww = self.patch_size[1] // 16
 
         self.is_segmentation = is_segmentation
     def forward(self, x):
         ## x:(b, c, w, h)
         b, c, h, w = x.shape
         assert self.config.in_channels == c, "in_channels != 输入图像channel"
-        p1 = self.img_size[0]
-        p2 = self.img_size[1]
+        p1 = self.patch_size[0]
+        p2 = self.patch_size[1]
 
         if h % p1 != 0:
             print("请重新输入img size 参数 必须整除")
@@ -49,7 +49,7 @@ class Encoder2D(nn.Module):
 
 
 class PreTrainModel(nn.Module):
-    def __init__(self, img_size, 
+    def __init__(self, patch_size, 
                         in_channels, 
                         out_class, 
                         hidden_size=1024, 
@@ -57,7 +57,7 @@ class PreTrainModel(nn.Module):
                         num_attention_heads=16,
                         decode_features=[512, 256, 128, 64]):
         super().__init__()
-        config = TransConfig(img_size=img_size, 
+        config = TransConfig(patch_size=patch_size, 
                             in_channels=in_channels, 
                             out_channels=0, 
                             hidden_size=hidden_size, 
@@ -73,7 +73,7 @@ class PreTrainModel(nn.Module):
         return out 
 
 class Vit(nn.Module):
-    def __init__(self, img_size, 
+    def __init__(self, patch_size, 
                         in_channels, 
                         out_class, 
                         hidden_size=1024, 
@@ -81,7 +81,7 @@ class Vit(nn.Module):
                         num_attention_heads=16,
                         ):
         super().__init__()
-        config = TransConfig(img_size=img_size, 
+        config = TransConfig(patch_size=patch_size, 
                             in_channels=in_channels, 
                             out_channels=0, 
                             hidden_size=hidden_size, 
@@ -135,7 +135,7 @@ class Decoder2D(nn.Module):
         return x
 
 class SETRModel(nn.Module):
-    def __init__(self, img_size=(32, 32), 
+    def __init__(self, patch_size=(32, 32), 
                         in_channels=3, 
                         out_channels=1, 
                         hidden_size=1024, 
@@ -143,7 +143,7 @@ class SETRModel(nn.Module):
                         num_attention_heads=16,
                         decode_features=[512, 256, 128, 64]):
         super().__init__()
-        config = TransConfig(img_size=img_size, 
+        config = TransConfig(patch_size=patch_size, 
                             in_channels=in_channels, 
                             out_channels=out_channels, 
                             hidden_size=hidden_size, 

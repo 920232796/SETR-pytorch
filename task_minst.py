@@ -28,7 +28,7 @@ def compute_acc(model, test_dataloader):
 
 if __name__ == "__main__":
 
-    model = Vit(img_size=(7, 7), 
+    model = Vit(patch_size=(7, 7), 
                     in_channels=1, 
                     out_class=10, 
                     hidden_size=1024, 

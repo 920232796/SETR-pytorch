@@ -2,7 +2,7 @@ from SETR.transformer_seg import SETRModel
 import torch 
 
 if __name__ == "__main__":
-    net = SETRModel(img_size=(16, 16), 
+    net = SETRModel(patch_size=(16, 16), 
                     in_channels=3, 
                     out_channels=1, 
                     hidden_size=1024, 

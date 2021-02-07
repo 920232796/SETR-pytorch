@@ -24,7 +24,7 @@ epoches = 100
 out_channels = 1
 
 def build_model():
-    model = SETRModel(img_size=(16, 16), 
+    model = SETRModel(patch_size=(16, 16), 
                     in_channels=3, 
                     out_channels=1, 
                     hidden_size=1024, 

@@ -24,7 +24,7 @@ class TransConfig(object):
     
     def __init__(
         self,
-        img_size,
+        patch_size,
         in_channels,
         out_channels,
         hidden_size=768,
@@ -38,7 +38,7 @@ class TransConfig(object):
         initializer_range=0.02,
         layer_norm_eps=1e-12,
     ):
-        self.img_size = img_size
+        self.patch_size = patch_size
         self.in_channels = in_channels
         self.out_channels = out_channels
         self.hidden_size = hidden_size
@@ -258,7 +258,7 @@ class TransEncoder(nn.Module):
 class InputDense2d(nn.Module):
     def __init__(self, config):
         super(InputDense2d, self).__init__()
-        self.dense = nn.Linear(config.img_size[0] * config.img_size[1] * config.in_channels, config.hidden_size)
+        self.dense = nn.Linear(config.patch_size[0] * config.patch_size[1] * config.in_channels, config.hidden_size)
         self.transform_act_fn = ACT2FN[config.hidden_act]
         self.LayerNorm = TransLayerNorm(config.hidden_size, eps=config.layer_norm_eps)
 
@@ -271,7 +271,7 @@ class InputDense2d(nn.Module):
 class InputDense3d(nn.Module):
     def __init__(self, config):
         super(InputDense3d, self).__init__()
-        self.dense = nn.Linear(config.img_size[0] * config.img_size[1] * config.img_size[2] * config.in_channels, config.hidden_size)
+        self.dense = nn.Linear(config.patch_size[0] * config.patch_size[1] * config.patch_size[2] * config.in_channels, config.hidden_size)
         self.transform_act_fn = ACT2FN[config.hidden_act]
         self.LayerNorm = TransLayerNorm(config.hidden_size, eps=config.layer_norm_eps)
 

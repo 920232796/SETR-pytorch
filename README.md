@@ -17,7 +17,7 @@ from SETR.transformer_seg import SETRModel
 import torch 
 
 if __name__ == "__main__":
-    net = SETRModel(img_size=(32, 32), 
+    net = SETRModel(patch_size=(32, 32), 
                     in_channels=3, 
                     out_channels=1, 
                     hidden_size=1024, 
@@ -39,7 +39,7 @@ from SETR.transformer_seg import Vit
 import torch 
 
 if __name__ == "__main__":
-    model = Vit(img_size=(7, 7), 
+    model = Vit(patch_size=(7, 7), 
                     in_channels=1, 
                     out_class=10, 
                     hidden_size=1024, 
