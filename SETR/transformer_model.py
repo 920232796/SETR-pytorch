@@ -27,6 +27,7 @@ class TransConfig(object):
         patch_size,
         in_channels,
         out_channels,
+        sample_rate=4,
         hidden_size=768,
         num_hidden_layers=8,
         num_attention_heads=6,
@@ -37,7 +38,8 @@ class TransConfig(object):
         max_position_embeddings=512,
         initializer_range=0.02,
         layer_norm_eps=1e-12,
-    ):
+    ):  
+        self.sample_rate = sample_rate
         self.patch_size = patch_size
         self.in_channels = in_channels
         self.out_channels = out_channels

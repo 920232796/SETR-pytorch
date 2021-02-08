@@ -1,12 +1,14 @@
 import logging
 import math
 import os
+import numpy as np 
 
 import torch
 from torch import nn
 from torch.nn import CrossEntropyLoss, MSELoss
 from einops import rearrange
 from SETR.transformer_model import TransModel2d, TransConfig
+import math 
 
 class Encoder2D(nn.Module):
     def __init__(self, config: TransConfig, is_segmentation=True):
@@ -14,11 +16,13 @@ class Encoder2D(nn.Module):
         self.config = config
         self.out_channels = config.out_channels
         self.bert_model = TransModel2d(config)
-        assert config.patch_size[0] * config.patch_size[1] * config.hidden_size % 256 == 0, "不能除尽"
-        self.final_dense = nn.Linear(config.hidden_size, config.patch_size[0] * config.patch_size[1] * config.hidden_size // 256)
+        sample_rate = config.sample_rate
+        sample_v = int(math.pow(2, sample_rate))
+        assert config.patch_size[0] * config.patch_size[1] * config.hidden_size % (sample_v**2) == 0, "不能除尽"
+        self.final_dense = nn.Linear(config.hidden_size, config.patch_size[0] * config.patch_size[1] * config.hidden_size // (sample_v**2))
         self.patch_size = config.patch_size
-        self.hh = self.patch_size[0] // 16
-        self.ww = self.patch_size[1] // 16
+        self.hh = self.patch_size[0] // sample_v
+        self.ww = self.patch_size[1] // sample_v
 
         self.is_segmentation = is_segmentation
     def forward(self, x):
@@ -79,11 +83,13 @@ class Vit(nn.Module):
                         hidden_size=1024, 
                         num_hidden_layers=8, 
                         num_attention_heads=16,
+                        sample_rate=4,
                         ):
         super().__init__()
         config = TransConfig(patch_size=patch_size, 
                             in_channels=in_channels, 
                             out_channels=0, 
+                            sample_rate=sample_rate,
                             hidden_size=hidden_size, 
                             num_hidden_layers=num_hidden_layers, 
                             num_attention_heads=num_attention_heads)
@@ -92,6 +98,7 @@ class Vit(nn.Module):
 
     def forward(self, x):
         encode_img = self.encoder_2d(x)
+        
         encode_pool = encode_img.mean(dim=1)
         out = self.cls(encode_pool)
         return out 
@@ -141,11 +148,13 @@ class SETRModel(nn.Module):
                         hidden_size=1024, 
                         num_hidden_layers=8, 
                         num_attention_heads=16,
-                        decode_features=[512, 256, 128, 64]):
+                        decode_features=[512, 256, 128, 64],
+                        sample_rate=4,):
         super().__init__()
         config = TransConfig(patch_size=patch_size, 
                             in_channels=in_channels, 
                             out_channels=out_channels, 
+                            sample_rate=sample_rate,
                             hidden_size=hidden_size, 
                             num_hidden_layers=num_hidden_layers, 
                             num_attention_heads=num_attention_heads)
